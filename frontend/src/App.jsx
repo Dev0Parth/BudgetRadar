@@ -51,19 +51,18 @@ export default function App() {
             secondary=""
           />
 
-          {/* Biggest Category */}
           <InfoCard
             label="Biggest Category"
             primary={topCategory(stats).name}
             secondary={`$${topCategory(stats).amount.toFixed(2)}`}
           />
 
-          {/* Categories Tracked */}
           <InfoCard
             label="Categories Tracked"
-            primary={stats.length.toString()}
+            primary={categoryCount(stats).toString()}
             secondary="active this month"
           />
+
         </main>
       )}
     </div>
@@ -84,22 +83,23 @@ function InfoCard({ label, primary, secondary }) {
 
 // Helpers expect stats like: [ { _id: "Groceries", total: -188.22 }, ... ]
 
-function totalSpent(statsArray) {
-  return statsArray.reduce(
-    (acc, row) => acc + Math.abs(row.total || 0),
-    0
-  );
+function totalSpent(statsObj) {
+  return statsObj.totalSpent || 0;
 }
 
-function topCategory(statsArray) {
-  if (!statsArray.length) {
+function topCategory(statsObj) {
+  if (!statsObj.categories || statsObj.categories.length === 0) {
     return { name: "N/A", amount: 0 };
   }
-  const sorted = [...statsArray].sort(
+  const sorted = [...statsObj.categories].sort(
     (a, b) => Math.abs(b.total) - Math.abs(a.total)
   );
   return {
     name: sorted[0]._id,
     amount: Math.abs(sorted[0].total),
   };
+}
+
+function categoryCount(statsObj) {
+  return statsObj.categories ? statsObj.categories.length : 0;
 }

@@ -3,6 +3,9 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 
+import uploadRouter from "./routes/uploadRoute.js";
+import statsRouter from "./routes/statsRoute.js";
+
 // Load environment variables
 dotenv.config();
 
@@ -33,6 +36,10 @@ mongoose
 app.get("/", (req, res) => {
   res.json({ status: "ok", message: "BudgetRadar API running" });
 });
+
+// mount routers
+app.use("/api", uploadRouter);
+app.use("/api", statsRouter);
 
 // Start server
 const PORT = process.env.PORT || 5000;
